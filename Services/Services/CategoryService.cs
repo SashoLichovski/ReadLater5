@@ -10,44 +10,44 @@ namespace Services
 {
     public class CategoryService : ICategoryService
     {
-        private ReadLaterDataContext _ReadLaterDataContext;
-        public CategoryService(ReadLaterDataContext readLaterDataContext) 
+        private readonly ReadLaterDataContext context;
+        public CategoryService(ReadLaterDataContext readLaterDataContext)
         {
-            _ReadLaterDataContext = readLaterDataContext;            
+            this.context = readLaterDataContext;
         }
 
         public Category CreateCategory(Category category)
         {
-            _ReadLaterDataContext.Add(category);
-            _ReadLaterDataContext.SaveChanges();
+            context.Add(category);
+            context.SaveChanges();
             return category;
         }
 
         public void UpdateCategory(Category category)
         {
-            _ReadLaterDataContext.Update(category);
-            _ReadLaterDataContext.SaveChanges();
+            context.Update(category);
+            context.SaveChanges();
         }
 
         public List<Category> GetCategories()
         {
-            return _ReadLaterDataContext.Categories.ToList();
+            return context.Categories.ToList();
         }
 
         public Category GetCategory(int Id)
         {
-            return _ReadLaterDataContext.Categories.Where(c => c.ID == Id).FirstOrDefault();
+            return context.Categories.Where(c => c.ID == Id).FirstOrDefault();
         }
 
         public Category GetCategory(string Name)
         {
-            return _ReadLaterDataContext.Categories.Where(c => c.Name == Name).FirstOrDefault();
+            return context.Categories.Where(c => c.Name == Name).FirstOrDefault();
         }
 
         public void DeleteCategory(Category category)
         {
-            _ReadLaterDataContext.Categories.Remove(category);
-            _ReadLaterDataContext.SaveChanges();
+            context.Categories.Remove(category);
+            context.SaveChanges();
         }
     }
 }
