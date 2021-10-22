@@ -1,10 +1,11 @@
 ﻿using Entity;
 using Microsoft.AspNetCore.Mvc;
-using Services;
+using ReadLater5.Models;
+using Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ReadLater5.Controllers
@@ -17,20 +18,22 @@ namespace ReadLater5.Controllers
             _categoryService = categoryService;
         }
         // GET: Categories
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Category> model = _categoryService.GetCategories();
+            var model = new CategoryModel();
+            model.Categories = await _categoryService.GetAllAsync();
+            model.Bookmark = new Bookmark();
             return View(model);
         }
 
         // GET: Categories/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
             }
-            Category category = _categoryService.GetCategory((int)id);
+            Category category = await _categoryService.GetByIdAsync((int)id);
             if (category == null)
             {
                 return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
@@ -50,55 +53,68 @@ namespace ReadLater5.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
-                _categoryService.CreateCategory(category);
+                await _categoryService.InsertAsync(category);
                 return RedirectToAction("Index");
             }
-
-            return View(category);
+            return RedirectToAction("Index");
         }
 
-        // GET: Categories/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task Test()
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
-            }
-            Category category = _categoryService.GetCategory((int)id);
-            if (category == null)
-            {
-                return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
-            }
-            return View(category);
+            var apiUser = "user";
+            var apiKey = "key";
+            var authToken = Encoding.ASCII.GetBytes($"{apiUser}:{apiKey}");
+            var url = "https://localhost:44326/api/ApiCategory";
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:44326/api/ApiCategory");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
+            
+            var response = await client.GetAsync(url);
+            var content = response.Content;
+            client.Dispose();
         }
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<IActionResult> Edit(int? id)
+        {
+            await Test();
+            //if (id == null)
+            //{
+            //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
+            //}
+            //Category category = await _categoryService.GetByIdAsync((int)id);
+            //if (category == null)
+            //{
+            //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
+            //}
+            //return View(category);
+            return Ok();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category category)
+        public async Task<IActionResult> Edit(Category category)
         {
             if (ModelState.IsValid)
             {
-                _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateAsync(category);
                 return RedirectToAction("Index");
             }
             return View(category);
         }
 
         // GET: Categories/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
             }
-            Category category = _categoryService.GetCategory((int)id);
+            Category category = await _categoryService.GetByIdAsync((int)id);
             if (category == null)
             {
                 return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
@@ -109,10 +125,10 @@ namespace ReadLater5.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Category category = _categoryService.GetCategory(id);
-            _categoryService.DeleteCategory(category);
+            Category category = await _categoryService.GetByIdAsync(id);
+            await _categoryService.DeleteAsync(category);
             return RedirectToAction("Index");
         }
     }

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Entity.Bookmark>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Model.First().Category.Name</h1>
+
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.URL)
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@item.URL" target="_blank">@item.URL</a>
+                </td>
+
+                <td>
+                    <a class="btn btn-sm btn-info" data-toggle="collapse" href=@string.Format("#collapse{0}",item.ID) role="button" aria-expanded="false" aria-controls="collapse">
+                        Description
+                    </a> |
+                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+
+            <tr class="collapse" id=@string.Format("collapse{0}",item.ID)>
+                <td class="card card-body" style="margin-bottom:10px">
+                    @item.ShortDescription
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index" asp-controller="Categories">Back to categories</a>
+</div>
