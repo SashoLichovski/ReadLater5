@@ -15,7 +15,6 @@ function SaveBookmark() {
     var descriptionValue = document.getElementById("bookmarkDescription").value;
     var categoryId = document.getElementById("categoryId").value;
     var data = { Url: urlValue, shortDescription: descriptionValue, categoryId: categoryId };
-    debugger;
     $.ajax({
         type: "POST",
         url: "https://localhost:44326/api/ApiBookmark/create",
@@ -27,24 +26,10 @@ function SaveBookmark() {
     })
         .then((data) => {
             hideCategoryForm();
-            ShowSuccessMessage("successfully created");
+            showMessage("Bookmark successfully created");
         })
         .catch((err) => {
-            console.log(err);
-    });
-}
-
-function ShowSuccessMessage(message) {
-    var body = document.getElementsByTagName("body")[0];
-
-    var message = document.createElement("div");
-    message.style.position = "absolute";
-    message.style.padding = "20px";
-    message.style.margin = "30px";
-    message.innerText = message;
-    body.appendChild(message)
-    message.event(onmouseover, function () {
-        message.remove();
+            showMessage("Something went wrong. Please go back or refresh the page");
     });
 }
 
@@ -56,3 +41,43 @@ $('select').on('change', function () {
         newNameElement.disabled = false;
     }
 });
+
+function addFavourite(id) {
+
+    $.ajax({
+        type: "GET",
+        url: "https://localhost:44326/api/ApiBookmark/addFavourite/" + id,
+        success: function (data) {
+        }
+    })
+        .then((data) => {
+            if (data == undefined) {
+                showMessage("Added to favourites");
+            } else {
+                showMessage("Removed from favourites");
+            }
+        })
+        .catch((err) => {
+            showMessage("Something went wrong. Please go back or refresh the page");
+        });
+}
+
+function showMessage(message) {
+    var container = document.getElementById("container");
+    var messageEle = document.createElement("div");
+    messageEle.innerText = message;
+    messageEle.classList.add("showMessage");
+
+    var closeBtn = document.createElement("div");
+    closeBtn.classList.add("far");
+    closeBtn.classList.add("fa-times-circle");
+    closeBtn.classList.add("pointer");
+    closeBtn.style.marginLeft = "10px";
+    closeBtn.addEventListener("click", function () {
+        messageEle.remove();
+    });
+
+    messageEle.appendChild(closeBtn);
+
+    container.appendChild(messageEle);
+}

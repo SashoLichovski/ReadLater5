@@ -1,17 +1,14 @@
 ﻿@model IEnumerable<BookmarkModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "MyBookmarks";
 }
 
-@if (Model.Any())
-{
-    <h1>@Model.First().CategoryName</h1>
-}
-else
-{
-    <h1>No Bookmarks</h1>
-}
+<h1>MyBookmarks</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 
 <partial name="_BookmarkList" for="@Model" />
 

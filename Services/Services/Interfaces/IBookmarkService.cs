@@ -12,5 +12,7 @@ namespace Services.Interfaces
         Task UpdateAndSave(string url, string description, Bookmark bookmark);
         Task DeleteAsync(Bookmark entity);
         Task<List<Bookmark>> GetAllAsync();
+        Task<List<Bookmark>> GetByUserIdAsync(string userId);
+        Task<List<Bookmark>> GetFavouritesAsync(string userId);
     }
 }

@@ -11,5 +11,7 @@ namespace Entity
         [StringLength(maximumLength: 50)]
         public string Name { get; set; }
         public List<Bookmark> Bookmarks { get; set; }
+        public string UserId { get; set; }
+        public string User { get; set; }
     }
 }

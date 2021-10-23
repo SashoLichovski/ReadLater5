@@ -25,5 +25,20 @@ namespace Data.Repositories
         {
             return context.Bookmark.FirstOrDefaultAsync(x => x.ID == id);
         }
+
+        public Task<List<Bookmark>> GetByUserIdAsync(string userId)
+        {
+            return context.Bookmark.Include(x => x.Category).Where(x => x.UserId == userId).ToListAsync();
+        }
+
+        public Task<List<int>> GetFavouriteIdsAsync(string userId)
+        {
+            return context.FavouriteBookmarks.Where(x => x.UserId == userId).Select(x => x.BookmarkId).ToListAsync();
+        }
+
+        public Task<List<Bookmark>> GetFavouritesAsync(List<int> bookmarkIds)
+        {
+            return context.Bookmark.Where(x => bookmarkIds.Contains(x.ID)).ToListAsync();
+        }
     }
 }

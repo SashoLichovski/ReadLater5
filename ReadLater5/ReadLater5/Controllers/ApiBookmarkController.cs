@@ -1,4 +1,5 @@
 ﻿using Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadLater5.ApiModels;
 using ReadLater5.Attributes;
@@ -8,6 +9,7 @@ using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ReadLater5.Controllers
@@ -17,16 +19,19 @@ namespace ReadLater5.Controllers
     public class ApiBookmarkController : ControllerBase
     {
         private readonly IBookmarkService bookmarkService;
+        private readonly IFavouriteBookmarkService favouriteBookmarkService;
 
-        public ApiBookmarkController(IBookmarkService bookmarkService)
+        public ApiBookmarkController(IBookmarkService bookmarkService, IFavouriteBookmarkService favouriteBookmarkService)
         {
             this.bookmarkService = bookmarkService;
+            this.favouriteBookmarkService = favouriteBookmarkService;
         }
 
-
         [HttpPost, Route("create")]
+        [Authorize]
         public async Task<IActionResult> CreateBookmark(BookmarkModel data)
         {
+            data.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (ModelState.IsValid)
             {
                 await bookmarkService.ValidateAndCreate(Mapper.ModelToBookmark(data));
@@ -94,7 +99,6 @@ namespace ReadLater5.Controllers
                 }
                 catch (Exception)
                 {
-                    //log error
                     return BadRequest(new { ErrorMessage = "Something went wrong. Please contact support" });
                 }
             }
@@ -115,11 +119,27 @@ namespace ReadLater5.Controllers
                 }
                 catch (Exception)
                 {
-                    //log error
                     return BadRequest(new { ErrorMessage = "Something went wrong. Please contact support" });
                 }
             }
             return BadRequest(new { ErrorMessage = "Bookmark not found" });
+        }
+
+        [HttpGet, Route("addFavourite/{id}")]
+        public async Task<IActionResult> AddFavourite(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var entity = await favouriteBookmarkService.GetFavouriteBookmarkAsync(userId, id);
+            if (entity != null)
+            {
+                await favouriteBookmarkService.RemoveFromFavouritesAsync(entity);
+                return Ok(entity);
+            }
+            else
+            {
+                await favouriteBookmarkService.AddToFavouritesAsync(userId, id);
+                return Ok(null);
+            }
         }
     }
 }

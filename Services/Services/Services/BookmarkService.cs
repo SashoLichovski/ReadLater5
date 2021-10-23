@@ -18,6 +18,11 @@ namespace Services.Services
             this.categoryService = categoryService;
         }
 
+        public Task<List<Bookmark>> GetByUserIdAsync(string userId)
+        {
+            return bookmarkRepository.GetByUserIdAsync(userId);
+        }
+
         public async Task<int> ValidateAndCreate(Bookmark bookmark)
         {
             if (string.IsNullOrEmpty(bookmark.URL) || string.IsNullOrEmpty(bookmark.ShortDescription))
@@ -54,6 +59,12 @@ namespace Services.Services
             bookmark.ShortDescription = description;
             bookmark.URL = url;
             return bookmarkRepository.UpdateAsync(bookmark);
+        }
+
+        public async Task<List<Bookmark>> GetFavouritesAsync(string userId)
+        {
+            List<int> favIds = await bookmarkRepository.GetFavouriteIdsAsync(userId);
+            return await bookmarkRepository.GetFavouritesAsync(favIds);
         }
     }
 }

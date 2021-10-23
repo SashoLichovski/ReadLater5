@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Entity
 {
@@ -6,5 +7,7 @@ namespace Entity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public virtual List<Bookmark> Bookmarks { get; set; }
+        public virtual List<Category> Categories { get; set; }
     }
 }

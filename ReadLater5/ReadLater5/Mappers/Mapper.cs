@@ -35,7 +35,8 @@ namespace ReadLater5.Mappers
             {
                 URL = b.URL,
                 CategoryId = b.CategoryId,
-                ShortDescription = b.ShortDescription
+                ShortDescription = b.ShortDescription,
+                UserId = b.UserId
             };
         }
 
@@ -46,7 +47,8 @@ namespace ReadLater5.Mappers
                 ID = m.ID,
                 CategoryId = m.CategoryId,
                 ShortDescription = m.ShortDescription,
-                URL = m.URL
+                URL = m.URL,
+                CategoryName = m.Category == null ? string.Empty : m.Category.Name
             };
         }
 

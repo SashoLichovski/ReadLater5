@@ -5,6 +5,7 @@ using Services.Interfaces;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,8 +51,10 @@ namespace ReadLater5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (ModelState.IsValid)
             {
+                category.UserId = userId;
                 await _categoryService.InsertAsync(category);
                 return RedirectToAction("Index");
             }

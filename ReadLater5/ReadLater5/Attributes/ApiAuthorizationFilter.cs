@@ -51,6 +51,10 @@ namespace ReadLater5.Attributes
                     context.Result = new ObjectResult("Forbidden") { StatusCode = 403 };
                 }
             }
+            else
+            {
+                context.Result = new ObjectResult("Unauthorized") { StatusCode = 401 };
+            }
         }
 
         private string Base64Decode(string base64EncodedData)

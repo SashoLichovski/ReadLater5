@@ -12,7 +12,9 @@ namespace ReadLater5.Models
         public string URL { get; set; }
         [Required]
         public string ShortDescription { get; set; }
+        public string UserId { get; set; }
         public List<CategoryModel> Categories { get; set; }
         public string NewCategoryName { get; set; }
+        public string CategoryName { get; set; }
     }
 }

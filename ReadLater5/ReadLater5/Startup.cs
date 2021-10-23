@@ -60,10 +60,12 @@ namespace ReadLater5
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IFavouriteBookmarkRepository, FavouriteBookmarkRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IBookmarkService, BookmarkService>();
+            services.AddTransient<IFavouriteBookmarkService, FavouriteBookmarkService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

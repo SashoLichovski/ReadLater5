@@ -8,6 +8,7 @@ using System.Linq;
 using Entity;
 using System.Collections.Generic;
 using System;
+using System.Security.Claims;
 
 namespace ReadLater5.Controllers
 {
@@ -26,7 +27,25 @@ namespace ReadLater5.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var model = await bookmarkService.GetBookmarksForCategoryAsync(id);
-            return View(model);
+            if (model.Any())
+            {
+                return View(model.Select(x => Mapper.BookmarkToModel(x)).ToList());
+            }
+            return View(new List<BookmarkModel>());
+        }
+
+        public async Task<IActionResult> FavouriteBookmarks()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var bookmarks = await bookmarkService.GetFavouritesAsync(userId);
+            return View(bookmarks.Select(x => Mapper.BookmarkToModel(x)));
+        }
+
+        public async Task<IActionResult> MyBookmarks()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            List<Bookmark> entities = await bookmarkService.GetByUserIdAsync(userId);
+            return View(entities.Select(x => Mapper.BookmarkToModel(x)).ToList());
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -39,12 +58,16 @@ namespace ReadLater5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BookmarkModel bookmark)
         {
-            var entity = await bookmarkService.GetByIdAsync(bookmark.ID);
-            if (entity != null)
+            if (ModelState.IsValid)
             {
-                await bookmarkService.UpdateAndSave(bookmark.URL, bookmark.ShortDescription, entity);
+                var entity = await bookmarkService.GetByIdAsync(bookmark.ID);
+                if (entity != null)
+                {
+                    await bookmarkService.UpdateAndSave(bookmark.URL, bookmark.ShortDescription, entity);
+                }
+                return RedirectToAction("Index", new { id = entity.CategoryId });
             }
-            return RedirectToAction("Index", new { id = entity.CategoryId });
+            return View(bookmark);
         }
 
         public async Task<IActionResult> Create()
@@ -60,15 +83,17 @@ namespace ReadLater5.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(BookmarkModel model)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             try
             {
                 if (model.CategoryId == 0 && !string.IsNullOrEmpty(model.NewCategoryName))
                 {
-                    await categoryService.ValidateAndCreate(new Category { Name = model.NewCategoryName, Bookmarks = new List<Bookmark> { new Bookmark { URL = model.URL, ShortDescription = model.ShortDescription } } });
+                    await categoryService.ValidateAndCreate(new Category { Name = model.NewCategoryName, UserId = userId, Bookmarks = new List<Bookmark> { new Bookmark { URL = model.URL, ShortDescription = model.ShortDescription, UserId = userId, CreateDate = DateTime.Now } } });
                     return RedirectToAction("Index", "Categories");
                 }
                 else
                 {
+                    model.UserId = userId;
                     await bookmarkService.ValidateAndCreate(Mapper.ModelToBookmark(model));
                     return RedirectToAction("Index", "Categories");
                 }

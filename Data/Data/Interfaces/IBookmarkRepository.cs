@@ -8,5 +8,8 @@ namespace Data.Interfaces
     {
         Task<List<Bookmark>> GetBookmarksForCategoryAsync(int categoryId);
         Task<Bookmark> GetByIdAsync(int id);
+        Task<List<Bookmark>> GetByUserIdAsync(string userId);
+        Task<List<Bookmark>> GetFavouritesAsync(List<int> bookmarkIds);
+        Task<List<int>> GetFavouriteIdsAsync(string userId);
     }
 }
