@@ -16,7 +16,7 @@ namespace Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Entity.Bookmark", b =>
@@ -26,7 +26,7 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDate")
@@ -60,6 +60,27 @@ namespace Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Entity.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Access")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApiUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Entity.User", b =>
@@ -271,8 +292,10 @@ namespace Data.Migrations
             modelBuilder.Entity("Entity.Bookmark", b =>
                 {
                     b.HasOne("Entity.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
                 });
@@ -326,6 +349,11 @@ namespace Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Entity.Category", b =>
+                {
+                    b.Navigation("Bookmarks");
                 });
 #pragma warning restore 612, 618
         }

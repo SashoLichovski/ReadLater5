@@ -10,21 +10,33 @@ namespace Services.Services
     public class BookmarkService : IBookmarkService
     {
         private readonly IBookmarkRepository bookmarkRepository;
+        private readonly ICategoryService categoryService;
 
-        public BookmarkService(IBookmarkRepository bookmarkRepository)
+        public BookmarkService(IBookmarkRepository bookmarkRepository, ICategoryService categoryService)
         {
             this.bookmarkRepository = bookmarkRepository;
+            this.categoryService = categoryService;
         }
 
-        public Task<int> CreateAndInsert(Bookmark bookmark)
+        public async Task<int> ValidateAndCreate(Bookmark bookmark)
         {
-            bookmark.CreateDate = DateTime.Now;
-            return bookmarkRepository.InsertAsync(bookmark);
+            if (string.IsNullOrEmpty(bookmark.URL) || string.IsNullOrEmpty(bookmark.ShortDescription))
+                throw new Exception("URL and Short description required");
+            
+            if (await categoryService.GetByIdAsync(bookmark.CategoryId) == null)
+                throw new Exception($"Category with ID {bookmark.CategoryId} not found");
+
+            return await bookmarkRepository.InsertAsync(bookmark);
         }
 
         public Task DeleteAsync(Bookmark entity)
         {
             return bookmarkRepository.DeleteAsync(entity);
+        }
+
+        public Task<List<Bookmark>> GetAllAsync()
+        {
+            return bookmarkRepository.GetAllAsync();
         }
 
         public Task<List<Bookmark>> GetBookmarksForCategoryAsync(int categoryId)

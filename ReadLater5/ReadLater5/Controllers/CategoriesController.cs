@@ -17,16 +17,15 @@ namespace ReadLater5.Controllers
         {
             _categoryService = categoryService;
         }
-        // GET: Categories
+
         public async Task<IActionResult> Index()
         {
-            var model = new CategoryModel();
+            var model = new CategoryViewModel();
             model.Categories = await _categoryService.GetAllAsync();
             model.Bookmark = new Bookmark();
             return View(model);
         }
 
-        // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,15 +41,11 @@ namespace ReadLater5.Controllers
 
         }
 
-        // GET: Categories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)
@@ -63,10 +58,10 @@ namespace ReadLater5.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task Test()
+        public async Task<HttpResponseMessage> Test()
         {
-            var apiUser = "user";
-            var apiKey = "key";
+            var apiUser = "TestUser2";
+            var apiKey = "TestKey2";
             var authToken = Encoding.ASCII.GetBytes($"{apiUser}:{apiKey}");
             var url = "https://localhost:44326/api/ApiCategory";
 
@@ -75,13 +70,13 @@ namespace ReadLater5.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
             
             var response = await client.GetAsync(url);
-            var content = response.Content;
             client.Dispose();
+            return response;
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            await Test();
+            var content = await Test();
             //if (id == null)
             //{
             //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
@@ -92,7 +87,7 @@ namespace ReadLater5.Controllers
             //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
             //}
             //return View(category);
-            return Ok();
+            return Ok(content);
         }
 
         [HttpPost]
@@ -107,7 +102,6 @@ namespace ReadLater5.Controllers
             return View(category);
         }
 
-        // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,7 +122,14 @@ namespace ReadLater5.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Category category = await _categoryService.GetByIdAsync(id);
-            await _categoryService.DeleteAsync(category);
+            try
+            {
+                await _categoryService.DeleteAsync(category);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home", new { ErrorMessage = "Can't delete category. There are bookmarks related" });
+            }
             return RedirectToAction("Index");
         }
     }

@@ -4,6 +4,10 @@ using ReadLater5.Mappers;
 using ReadLater5.Models;
 using Services.Interfaces;
 using System.Threading.Tasks;
+using System.Linq;
+using Entity;
+using System.Collections.Generic;
+using System;
 
 namespace ReadLater5.Controllers
 {
@@ -11,10 +15,12 @@ namespace ReadLater5.Controllers
     public class BookmarkController : Controller
     {
         private readonly IBookmarkService bookmarkService;
+        private readonly ICategoryService categoryService;
 
-        public BookmarkController(IBookmarkService bookmarkService)
+        public BookmarkController(IBookmarkService bookmarkService, ICategoryService categoryService)
         {
             this.bookmarkService = bookmarkService;
+            this.categoryService = categoryService;
         }
 
         public async Task<IActionResult> Index(int id)
@@ -39,6 +45,38 @@ namespace ReadLater5.Controllers
                 await bookmarkService.UpdateAndSave(bookmark.URL, bookmark.ShortDescription, entity);
             }
             return RedirectToAction("Index", new { id = entity.CategoryId });
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var categories = await categoryService.GetAllAsync();
+            var model = new BookmarkModel
+            {
+                Categories = categories.Select(x => Mapper.CategoryToModel(x)).ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(BookmarkModel model)
+        {
+            try
+            {
+                if (model.CategoryId == 0 && !string.IsNullOrEmpty(model.NewCategoryName))
+                {
+                    await categoryService.ValidateAndCreate(new Category { Name = model.NewCategoryName, Bookmarks = new List<Bookmark> { new Bookmark { URL = model.URL, ShortDescription = model.ShortDescription } } });
+                    return RedirectToAction("Index", "Categories");
+                }
+                else
+                {
+                    await bookmarkService.ValidateAndCreate(Mapper.ModelToBookmark(model));
+                    return RedirectToAction("Index", "Categories");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { ErrorMessage = ex.Message});
+            }
         }
 
         public async Task<IActionResult> Delete(int id)

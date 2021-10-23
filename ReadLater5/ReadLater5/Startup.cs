@@ -59,6 +59,7 @@ namespace ReadLater5
 
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IBookmarkRepository, BookmarkRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoryService, CategoryService>();

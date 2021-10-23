@@ -1,4 +1,4 @@
-﻿@model CategoryModel
+﻿@model CategoryViewModel
 
 @{
     ViewBag.Title = "Categories";
@@ -11,7 +11,8 @@
 <h2>Categories</h2>
 
 <p>
-    <a class="btn btn-sm btn-primary" asp-action="Create">Create new</a>
+    <a class="btn btn-sm btn-primary" asp-action="Create">Create Category</a>
+    <a class="btn btn-sm btn-primary" asp-controller="Bookmark" asp-action="Create">Create Bookmark</a>
 </p>
 <table class="table">
     <tr>

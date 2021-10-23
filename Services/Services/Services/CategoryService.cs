@@ -1,7 +1,9 @@
 ﻿using Data.Interfaces;
 using Entity;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.Services
@@ -25,9 +27,14 @@ namespace Services.Services
             return categoryRepository.GetAllAsync();
         }
 
-        public Task<Category> GetByIdAsync(int id)
+        public Task<List<Category>> GetAllWithBookmarksAsync()
         {
-            return categoryRepository.GetByIdAsync(id);
+            return categoryRepository.GetAllWithBookmarksAsync();
+        }
+
+        public Task<Category> GetByIdAsync(int id, bool includeBookmark = false)
+        {
+            return categoryRepository.GetByIdAsync(id, includeBookmark);
         }
 
         public Task InsertAsync(Category categ)
@@ -38,6 +45,17 @@ namespace Services.Services
         public Task UpdateAsync(Category category)
         {
             return categoryRepository.UpdateAsync(category);
+        }
+
+        public async Task ValidateAndCreate(Category category)
+        {
+            if (category.Bookmarks.Any() && category.Bookmarks.Any(x => x.URL == null || x.ShortDescription == null))
+                throw new Exception("Bookmark URLs and ShortDescriptions are required");
+
+            if (string.IsNullOrEmpty(category.Name))
+                throw new Exception("Category name is required");
+
+            await InsertAsync(category);
         }
     }
 }

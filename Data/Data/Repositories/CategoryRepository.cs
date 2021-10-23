@@ -3,6 +3,7 @@ using Entity;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Data.Repositories
 {
@@ -15,10 +16,17 @@ namespace Data.Repositories
             this.context = context;
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        public Task<Category> GetByIdAsync(int id, bool includeBookmark = false)
         {
-            return await context.Categories.FirstOrDefaultAsync(x => x.ID == id);
+            if (includeBookmark)
+                return context.Categories.Include(x => x.Bookmarks).FirstOrDefaultAsync(x => x.ID == id);
+
+            return context.Categories.FirstOrDefaultAsync(x => x.ID == id);
         }
 
+        public Task<List<Category>> GetAllWithBookmarksAsync()
+        {
+            return context.Categories.Include(x => x.Bookmarks).ToListAsync();
+        }
     }
 }

@@ -42,18 +42,5 @@ namespace Data.Repositories
             context.Update<T>(obj);
             return context.SaveChangesAsync();
         }
-
-        //private void CleanUpAddedEntities()
-        //{
-        //    var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-        //    var objectStateManager = objectContext.ObjectStateManager;
-        //    var objectStateEntries = objectStateManager.GetObjectStateEntries((System.Data.Entity.EntityState)EntityState.Added);
-
-        //    foreach (var obStateEntry in objectStateEntries)
-        //    {
-        //        if (obStateEntry.Entity != null)
-        //            objectContext.Detach(obStateEntry.Entity);
-        //    }
-        //}
     }
 }

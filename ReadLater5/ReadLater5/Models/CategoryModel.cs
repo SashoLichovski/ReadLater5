@@ -1,11 +1,8 @@
-﻿using Entity;
-using System.Collections.Generic;
-
-namespace ReadLater5.Models
+﻿namespace ReadLater5.Models
 {
     public class CategoryModel
     {
-        public List<Category> Categories { get; set; }
-        public Bookmark Bookmark { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
