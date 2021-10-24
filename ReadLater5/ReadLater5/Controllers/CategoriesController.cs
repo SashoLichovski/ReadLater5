@@ -63,6 +63,7 @@ namespace ReadLater5.Controllers
             return RedirectToAction("Index");
         }
 
+        //Test auth request for managing APIs
         public async Task<HttpResponseMessage> Test()
         {
             var apiUser = "TestUser2";
@@ -81,18 +82,16 @@ namespace ReadLater5.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            var content = await Test();
-            //if (id == null)
-            //{
-            //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
-            //}
-            //Category category = await _categoryService.GetByIdAsync((int)id);
-            //if (category == null)
-            //{
-            //    return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
-            //}
-            //return View(category);
-            return Ok(content);
+            if (id == null)
+            {
+                return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
+            }
+            Category category = await _categoryService.GetByIdAsync((int)id);
+            if (category == null)
+            {
+                return new StatusCodeResult(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound);
+            }
+            return View(category);
         }
 
         [HttpPost]
