@@ -39,6 +39,8 @@ namespace ReadLater5.Controllers
             return View(registerModel);
         }
 
+        //Uncomment the seeder code in order to get some random data
+        //when you first launch the web app
         public async Task<IActionResult> Login(bool wrongCredentials = false)
         {
             //var seeder = new Seed(categoryService, bookmarkService, userService);
