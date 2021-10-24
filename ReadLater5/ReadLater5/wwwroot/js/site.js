@@ -14,6 +14,11 @@ function SaveBookmark() {
     var urlValue = document.getElementById("bookmarkUrl").value;
     var descriptionValue = document.getElementById("bookmarkDescription").value;
     var categoryId = document.getElementById("categoryId").value;
+    if (urlValue == "" || descriptionValue == "") {
+        showMessage("All fields are required");
+        return;
+    }
+
     var data = { Url: urlValue, shortDescription: descriptionValue, categoryId: categoryId };
     $.ajax({
         type: "POST",
