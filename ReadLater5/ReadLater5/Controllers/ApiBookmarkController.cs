@@ -1,5 +1,4 @@
-﻿using Entity;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadLater5.ApiModels;
 using ReadLater5.Attributes;

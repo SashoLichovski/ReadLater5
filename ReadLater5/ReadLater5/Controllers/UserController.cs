@@ -1,10 +1,6 @@
-﻿using Entity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReadLater5.Mappers;
 using ReadLater5.Models;
-using ReadLater5.Seeder;
 using Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;

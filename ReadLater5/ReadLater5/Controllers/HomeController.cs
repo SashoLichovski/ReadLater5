@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ReadLater5.Models;
-using System.Diagnostics;
 
 namespace ReadLater5.Controllers
 {
