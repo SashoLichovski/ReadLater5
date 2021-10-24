@@ -32,4 +32,5 @@
     padding: 30px;
     background-color: rgb(26 194 0);
     border-radius: 10px;
+    z-index: 2;
 }
