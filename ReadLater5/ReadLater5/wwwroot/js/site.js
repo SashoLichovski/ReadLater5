@@ -55,12 +55,20 @@ function addFavourite(id) {
                 showMessage("Added to favourites");
                 updateFavoriteStats(id, "true");
                 var ele = document.getElementById("fav-" + id);
-                ele.innerText++;
+                if (ele != null) {
+                    ele.innerText++;
+                }
             } else {
                 showMessage("Removed from favourites");
                 updateFavoriteStats(id, "false");
                 var ele = document.getElementById("fav-" + id);
-                ele.innerText--;
+                if (ele != null) {
+                    ele.innerText--;
+                }
+                var test = document.getElementById("Favorite-" + id);
+                if (test != null) {
+                    test.remove();
+                }
             }
         })
         .catch((err) => {

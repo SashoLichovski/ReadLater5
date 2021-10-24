@@ -1,17 +1,12 @@
-﻿using Data.Interfaces;
-using Entity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReadLater5.ApiModels;
 using ReadLater5.Attributes;
-using ReadLater5.Exceptions;
 using ReadLater5.Mappers;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ReadLater5.Controllers
 {
