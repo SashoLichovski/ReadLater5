@@ -1,0 +1,50 @@
+﻿@model IEnumerable<BookmarkModel>
+
+<h2>@ViewBag.OrderBy</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Url
+            </th>
+            <th>
+                Times opened
+            </th>
+            <th>
+                Added to favorites
+            </th>
+            <th>Description</th>
+            <th>Add to favorites</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a onclick="updateBookmarkTrackingStats(@item.ID)"  href="@item.URL" target="_blank">@item.URL</a>
+                </td>
+                <td id="stat-@item.ID">
+                    @item.TimesOpened
+                </td>
+                <td id="fav-@item.ID">
+                    @item.TimesAddedToFavorites
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-info" data-toggle="collapse" href=@string.Format("#collapse{0}",item.ID) role="button" aria-expanded="false" aria-controls="collapse">
+                    Description</a>
+                </td>
+                <td>
+                    <a onclick="addFavourite(@item.ID)"  class="far fa-star pointer" data-toggle="tooltip" data-placement="top" title="Add to Favourites"></a>
+                </td>
+            </tr>
+
+            <tr class="collapse" id=@string.Format("collapse{0}",item.ID)>
+                <td class="card card-body" style="margin-bottom:10px">
+                    @item.ShortDescription
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

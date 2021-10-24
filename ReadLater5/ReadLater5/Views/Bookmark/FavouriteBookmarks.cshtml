@@ -1,0 +1,13 @@
+﻿@model IEnumerable<BookmarkModel>
+
+@{
+    ViewData["Title"] = "MyBookmarks";
+}
+
+<h1>Favourite bookmarks</h1>
+
+<partial name="_BookmarkList" for="@Model" />
+
+<div>
+    <a asp-action="Index" asp-controller="Categories">Back to categories</a>
+</div>

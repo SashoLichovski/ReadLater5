@@ -1,34 +1,65 @@
-﻿@model IEnumerable<Entity.Category>
+﻿@model CategoryViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Categories";
 }
 
-<h2>Index</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/bookmarks.css" />
+}
+
+<h2>Categories</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a class="btn btn-sm btn-primary" asp-action="Create">Create Category</a>
+    <a class="btn btn-sm btn-primary" asp-controller="Bookmark" asp-action="Create">Create Bookmark</a>
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Category name
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Categories)
     {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                <a class="btn btn-sm btn-success" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a class="btn btn-sm btn-success" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a class="btn btn-sm btn-success" asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
+                <a class="btn btn-sm btn-success text-light pointer" id="@item.ID" onclick="showCategoryForm(event)">Add Bookmark</a> |
+                <a class="btn btn-sm btn-success" asp-controller="Bookmark" asp-action="Index" asp-route-id="@item.ID">Open bookmarks</a>
             </td>
         </tr>
     }
 
 </table>
+
+<div class="addBookmarkFormContainer" id="bookmakrFormContainer">
+    <form asp-action="EditFullName" >
+        <input hidden id="categoryId" />
+        <div class="form-group">
+            <label asp-for="Bookmark.URL" class="control-label"></label>
+            <input asp-for="Bookmark.URL" id="bookmarkUrl" class="form-control" />
+            <span asp-validation-for="Bookmark.URL" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Bookmark.ShortDescription" class="control-label"></label>
+            <input asp-for="Bookmark.ShortDescription" id="bookmarkDescription" class="form-control" />
+            <span asp-validation-for="Bookmark.ShortDescription" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary pointer" onclick="SaveBookmark()">Save</a>
+            <a class="btn btn-primary pointer" onclick="hideCategoryForm()">Back</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}

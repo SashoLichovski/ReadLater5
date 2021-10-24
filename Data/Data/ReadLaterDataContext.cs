@@ -1,15 +1,10 @@
 ﻿using Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data
 {
-    public class ReadLaterDataContext : IdentityDbContext
+    public class ReadLaterDataContext : IdentityDbContext<User>
 
     {
         public ReadLaterDataContext(DbContextOptions<ReadLaterDataContext> options) : base(options)
@@ -23,5 +18,7 @@ namespace Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Bookmark> Bookmark { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<FavouriteBookmarks> FavouriteBookmarks { get; set; }
     }
 }

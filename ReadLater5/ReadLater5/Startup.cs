@@ -1,17 +1,16 @@
 using Data;
+using Data.Interfaces;
+using Data.Repositories;
+using Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Services.Interfaces;
+using Services.Services;
 
 namespace ReadLater5
 {
@@ -30,14 +29,43 @@ namespace ReadLater5
             services.AddDbContext<ReadLaterDataContext>(options =>
                options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<ReadLaterDataContext>();
 
-            services.AddScoped<ICategoryService, CategoryService>();
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.LoginPath = new PathString("/User/Login");
+            });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt =>
+            {
+                opt.EnableEndpointRouting = false;
+            }).AddRazorRuntimeCompilation();
+
+            services.AddAuthentication()
+                .AddGoogle(opt =>
+                {
+                    opt.ClientId = Configuration.GetValue<string>("GoogleAuthentication:ClientId");
+                    opt.ClientSecret = Configuration.GetValue<string>("GoogleAuthentication:ClientSecret");
+                })
+                .AddFacebook(opt =>
+                {
+                    opt.AppId = Configuration.GetValue<string>("FacebookAuthentication:AppId");
+                    opt.AppSecret = Configuration.GetValue<string>("FacebookAuthentication:AppSecret");
+                });
+
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IBookmarkRepository, BookmarkRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddTransient<IFavouriteBookmarkRepository, FavouriteBookmarkRepository>();
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IBookmarkService, BookmarkService>();
+            services.AddTransient<IFavouriteBookmarkService, FavouriteBookmarkService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +94,7 @@ namespace ReadLater5
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Categories}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

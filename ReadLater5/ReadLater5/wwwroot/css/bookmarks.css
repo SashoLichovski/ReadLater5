@@ -1,0 +1,35 @@
+﻿.addBookmarkFormContainer {
+    display: none;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    background-color: rgba(22,22,22,0.9);
+    justify-content: center;
+}
+
+.addBookmarkFormContainer form {
+    color: whitesmoke;
+    padding: 50px;
+    width: 50%;
+}
+
+.addBookmarkFormContainer form input {
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.showMessage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    padding: 30px;
+    background-color: rgb(26 194 0);
+    border-radius: 10px;
+}
