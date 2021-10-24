@@ -41,6 +41,7 @@ namespace ReadLater5.Controllers
 
         //Uncomment the seeder code in order to get some random data
         //when you first launch the web app
+        //This is the initial view if user in not logged in
         public async Task<IActionResult> Login(bool wrongCredentials = false)
         {
             //var seeder = new Seed(categoryService, bookmarkService, userService);
@@ -91,10 +92,7 @@ namespace ReadLater5.Controllers
             if (isSuccess)
                 return RedirectToAction("Index", "Home");
 
-            ViewBag.ErrorTitle = $"Something went wrong";
-            ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
-            return View("Error");
+            return RedirectToAction("Error", "Home", new { ErrorMessage = "Please contact support on Pragim@PragimTech.com" });
         }
     }
 }
