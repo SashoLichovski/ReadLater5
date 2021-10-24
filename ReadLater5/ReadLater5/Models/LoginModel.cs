@@ -17,5 +17,6 @@ namespace ReadLater5.Models
 
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public bool WrongCredentials { get; set; }
     }
 }

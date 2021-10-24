@@ -48,6 +48,9 @@ namespace ReadLater5.Mappers
                 CategoryId = m.CategoryId,
                 ShortDescription = m.ShortDescription,
                 URL = m.URL,
+                TimesOpened = m.TimesOpened,
+                TimesAddedToFavorites = m.TimesAddedToFavorites,
+                LastTimeOpened = m.LastTimeOpened,
                 CategoryName = m.Category == null ? string.Empty : m.Category.Name
             };
         }

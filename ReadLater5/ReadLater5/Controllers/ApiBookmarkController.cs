@@ -125,6 +125,7 @@ namespace ReadLater5.Controllers
             return BadRequest(new { ErrorMessage = "Bookmark not found" });
         }
 
+        [Authorize]
         [HttpGet, Route("addFavourite/{id}")]
         public async Task<IActionResult> AddFavourite(int id)
         {
@@ -140,6 +141,20 @@ namespace ReadLater5.Controllers
                 await favouriteBookmarkService.AddToFavouritesAsync(userId, id);
                 return Ok(null);
             }
+        }
+
+        [Authorize]
+        [HttpGet, Route("updateTrackingStats/{id}")]
+        public async Task UpdateTrackingStats(int id)
+        {
+            await bookmarkService.UpdateTrackingStats(id);
+        }
+
+        [Authorize]
+        [HttpGet, Route("updateFavoriteStats/{id}/{isAdd}")]
+        public async Task UpdateFavorites(int id, string isAdd)
+        {
+            await bookmarkService.UpdateFavoriteStats(id, bool.Parse(isAdd));
         }
     }
 }

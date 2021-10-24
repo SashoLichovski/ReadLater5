@@ -8,7 +8,7 @@
                 <form id="account" method="post">
                     <h4 class="text-dark">Log In</h4>
                     <hr />
-                    @if (!string.IsNullOrEmpty(Model.Username) && !string.IsNullOrEmpty(Model.Password))
+                    @if (Model.WrongCredentials)
                     {
                         <span class="text-danger">Wrong username or password</span>
                     }
@@ -38,7 +38,7 @@
             <h4>External login</h4>
             <hr />
             @{ 
-                @if (Model.ExternalLogins.Count == 0)
+                @if (!Model.ExternalLogins.Any())
                 {
                     <div>No external login providers</div>
                 }

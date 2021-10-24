@@ -32,8 +32,17 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastTimeOpened")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ShortDescription")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TimesAddedToFavorites")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimesOpened")
+                        .HasColumnType("int");
 
                     b.Property<string>("URL")
                         .HasMaxLength(500)

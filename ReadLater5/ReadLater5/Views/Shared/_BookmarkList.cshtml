@@ -10,7 +10,7 @@
             <th>
                 Actions
             </th>
-            <th></th>
+            <th>Add to favorites</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +18,7 @@
         {
         <tr>
             <td>
-                <a href="@item.URL" target="_blank">@item.URL</a>
+                <a onclick="updateBookmarkTrackingStats(@item.ID)" href="@item.URL" target="_blank">@item.URL</a>
             </td>
             <td>
                 @item.CategoryName

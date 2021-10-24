@@ -19,5 +19,8 @@ namespace Entity
         public DateTime CreateDate { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
+        public int TimesOpened { get; set; }
+        public int TimesAddedToFavorites { get; set; }
+        public DateTime LastTimeOpened { get; set; }
     }
 }

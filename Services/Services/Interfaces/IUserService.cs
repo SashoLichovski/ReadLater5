@@ -15,5 +15,6 @@ namespace Services.Interfaces
         AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl);
         Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync();
         Task<bool> HandleExternalLoginAndCallbackAsync();
+        Task<List<User>> GetAll();
     }
 }

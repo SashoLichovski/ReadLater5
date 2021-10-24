@@ -66,5 +66,31 @@ namespace Services.Services
             List<int> favIds = await bookmarkRepository.GetFavouriteIdsAsync(userId);
             return await bookmarkRepository.GetFavouritesAsync(favIds);
         }
+
+        public async Task UpdateTrackingStats(int id)
+        {
+            var bookmark = await GetByIdAsync(id);
+            if (bookmark != null)
+            {
+                bookmark.TimesOpened++;
+                bookmark.LastTimeOpened = DateTime.Now;
+                await bookmarkRepository.UpdateAsync(bookmark);
+            }
+        }
+
+        public async Task UpdateFavoriteStats(int id, bool isAdd)
+        {
+            var bookmark = await GetByIdAsync(id);
+            if (bookmark != null && isAdd)
+            {
+                bookmark.TimesAddedToFavorites++;
+                await bookmarkRepository.UpdateAsync(bookmark);
+            }
+            else if (bookmark != null && !isAdd)
+            {
+                bookmark.TimesAddedToFavorites--;
+                await bookmarkRepository.UpdateAsync(bookmark);
+            }
+        }
     }
 }

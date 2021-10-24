@@ -23,6 +23,11 @@ namespace Services.Services
             this.signInManager = signInManager;
         }
 
+        public Task<List<User>> GetAll()
+        {
+            return userManager.Users.ToListAsync();
+        }
+
         public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync()
         {
             return await signInManager.GetExternalAuthenticationSchemesAsync();

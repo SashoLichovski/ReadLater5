@@ -53,13 +53,26 @@ function addFavourite(id) {
         .then((data) => {
             if (data == undefined) {
                 showMessage("Added to favourites");
+                updateFavoriteStats(id, "true");
+                var ele = document.getElementById("fav-" + id);
+                ele.innerText++;
             } else {
                 showMessage("Removed from favourites");
+                updateFavoriteStats(id, "false");
+                var ele = document.getElementById("fav-" + id);
+                ele.innerText--;
             }
         })
         .catch((err) => {
             showMessage("Something went wrong. Please go back or refresh the page");
         });
+}
+
+function updateFavoriteStats(id, isAdd) {
+    $.ajax({
+        type: "GET",
+        url: "https://localhost:44326/api/ApiBookmark/updateFavoriteStats/" + id + "/" + isAdd
+    });
 }
 
 function showMessage(message) {
@@ -80,4 +93,13 @@ function showMessage(message) {
     messageEle.appendChild(closeBtn);
 
     container.appendChild(messageEle);
+}
+
+function updateBookmarkTrackingStats(id) {
+    var ele = document.getElementById("stat-" + id);
+    ele.innerText++;
+    $.ajax({
+        type: "GET",
+        url: "https://localhost:44326/api/ApiBookmark/updateTrackingStats/" + id
+    });
 }

@@ -14,5 +14,7 @@ namespace Services.Interfaces
         Task<List<Bookmark>> GetAllAsync();
         Task<List<Bookmark>> GetByUserIdAsync(string userId);
         Task<List<Bookmark>> GetFavouritesAsync(string userId);
+        Task UpdateTrackingStats(int id);
+        Task UpdateFavoriteStats(int id, bool isAdd);
     }
 }

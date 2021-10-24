@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReadLater5.Models
@@ -16,5 +17,8 @@ namespace ReadLater5.Models
         public List<CategoryModel> Categories { get; set; }
         public string NewCategoryName { get; set; }
         public string CategoryName { get; set; }
+        public int TimesOpened { get; set; }
+        public int TimesAddedToFavorites { get; set; }
+        public DateTime LastTimeOpened { get; set; }
     }
 }

@@ -51,6 +51,24 @@ namespace ReadLater5.Controllers
             return View(entities.Select(x => Mapper.BookmarkToModel(x)).ToList());
         }
 
+        public async Task<IActionResult> Dashboard(bool byTimes = false, bool byFavorites = false)
+        {
+            var entities = await bookmarkService.GetAllAsync();
+            var model = new List<BookmarkModel>();
+            if (byTimes)
+            {
+                model = entities.Select(y => Mapper.BookmarkToModel(y)).OrderByDescending(x => x.TimesOpened).ToList();
+                ViewBag.OrderBy = "Most times opened";
+            }
+            if (byFavorites)
+            {
+                model = entities.Select(y => Mapper.BookmarkToModel(y)).OrderByDescending(x => x.TimesAddedToFavorites).ToList();
+                ViewBag.OrderBy = "Most times added to favorites";
+            }
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Edit(int id)
         {
             var model = await bookmarkService.GetByIdAsync(id);

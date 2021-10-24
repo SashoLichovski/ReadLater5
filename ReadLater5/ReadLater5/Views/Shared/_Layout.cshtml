@@ -23,17 +23,25 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Bookmark" asp-action="MyBookmarks">My Bookmarks</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Bookmark" asp-action="FavouriteBookmarks">Favourites</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
-                            </li>
-                        </ul>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Bookmark" asp-action="MyBookmarks">My Bookmarks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Bookmark" asp-action="FavouriteBookmarks">Favourites</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dashboard</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="Bookmark" asp-action="Dashboard" asp-route-byTimes="@true">By times opened</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Bookmark" asp-action="Dashboard" asp-route-byFavorites="@true">By favorites</a>
+                            </div>
+                        </li>
+                    </ul>
                     }
                     <partial name="_LoginPartial" />
                 </div>

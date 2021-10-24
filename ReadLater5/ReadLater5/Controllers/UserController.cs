@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReadLater5.Mappers;
 using ReadLater5.Models;
+using ReadLater5.Seeder;
 using Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +14,14 @@ namespace ReadLater5.Controllers
     public class UserController : Controller
     {
         private readonly IUserService userService;
+        private readonly ICategoryService categoryService;
+        private readonly IBookmarkService bookmarkService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ICategoryService categoryService, IBookmarkService bookmarkService)
         {
             this.userService = userService;
+            this.categoryService = categoryService;
+            this.bookmarkService = bookmarkService;
         }
 
         public async Task<IActionResult> RegisterUser(RegisterModel registerModel)
@@ -34,11 +39,14 @@ namespace ReadLater5.Controllers
             return View(registerModel);
         }
 
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(bool wrongCredentials = false)
         {
+            //var seeder = new Seed(categoryService, bookmarkService, userService);
+            //await seeder.SeedDB();
             var loginModel = new LoginModel() 
             {   
-                ExternalLogins = (await userService.GetExternalAuthenticationSchemesAsync()).ToList()
+                ExternalLogins = (await userService.GetExternalAuthenticationSchemesAsync()).ToList(),
+                WrongCredentials = wrongCredentials
             };
 
             return View(loginModel);
@@ -55,7 +63,7 @@ namespace ReadLater5.Controllers
             if (ModelState.IsValid && await userService.Authenticate(loginModel.Username, loginModel.Password))
                  return RedirectToAction("Index", "Home");
             else
-                return View("Login", loginModel);
+                return RedirectToAction("Login", new { WrongCredentials = true });
         }
 
         public IActionResult ExternalLogin(string provider)
