@@ -1,4 +1,5 @@
 ﻿using Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadLater5.Models;
 using Services.Interfaces;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace ReadLater5.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         ICategoryService _categoryService;

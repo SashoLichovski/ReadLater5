@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadLater5.Mappers;
 using ReadLater5.Models;
 using Services.Interfaces;
-using System.Threading.Tasks;
-using System.Linq;
-using Entity;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ReadLater5.Controllers
 {
@@ -26,16 +26,18 @@ namespace ReadLater5.Controllers
 
         public async Task<IActionResult> Index(int id)
         {
-            var model = await bookmarkService.GetBookmarksForCategoryAsync(id);
-            if (model.Any())
+            var entities = await bookmarkService.GetBookmarksForCategoryAsync(id);
+            ViewBag.Page = "Index";
+            if (entities.Any())
             {
-                return View(model.Select(x => Mapper.BookmarkToModel(x)).ToList());
+                return View(entities.Select(x => Mapper.BookmarkToModel(x)).ToList());
             }
             return View(new List<BookmarkModel>());
         }
 
         public async Task<IActionResult> FavouriteBookmarks()
         {
+            ViewBag.Page = "Favorite";
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var bookmarks = await bookmarkService.GetFavouritesAsync(userId);
             return View(bookmarks.Select(x => Mapper.BookmarkToModel(x)));
@@ -43,6 +45,7 @@ namespace ReadLater5.Controllers
 
         public async Task<IActionResult> MyBookmarks()
         {
+            ViewBag.Page = "MyBookmarks";
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<Bookmark> entities = await bookmarkService.GetByUserIdAsync(userId);
             return View(entities.Select(x => Mapper.BookmarkToModel(x)).ToList());

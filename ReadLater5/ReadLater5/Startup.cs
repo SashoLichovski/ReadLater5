@@ -94,7 +94,7 @@ namespace ReadLater5
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=User}/{action=Login}/{id?}");
+                    pattern: "{controller=Categories}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

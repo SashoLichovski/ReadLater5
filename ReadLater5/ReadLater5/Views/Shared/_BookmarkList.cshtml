@@ -26,9 +26,12 @@
             <td>
                 <a class="btn btn-sm btn-info" data-toggle="collapse" href=@string.Format("#collapse{0}",item.ID) role="button" aria-expanded="false" aria-controls="collapse">
                     Description
-                </a> |
-                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </a>
+                @if (ViewBag.Page == "MyBookmarks")
+                {
+                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                }
             </td>
             <td>
                 <a onclick="addFavourite(@item.ID)" id="@item.ID" class="far fa-star pointer" data-toggle="tooltip" data-placement="top" title="Add to Favourites"></a>
